@@ -1,6 +1,19 @@
+using AgenciaViajesAPI.Data;
+using AgenciaViajesAPI.Repositories;
+using AgenciaViajesAPI.Services;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<AgenciaDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<DestinoRepository>();
+builder.Services.AddScoped<DestinoService>();
+builder.Services.AddScoped<PaqueteRepository>();
+builder.Services.AddScoped<PaqueteService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -12,6 +25,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
